@@ -1,0 +1,43 @@
+masses = {
+    'H': 1.0079,
+    'C': 12.011,
+    'N': 14.007,
+    'O': 15.999,
+    'S': 32.06,
+    'Cl': 35.45,
+    'Fe': 55.845,
+    'Og': 294,
+}
+
+formula = []
+molecule = ''
+
+chemical = input()
+
+while chemical != '':
+    element_number = chemical.split()
+    element = element_number[0]
+    number = int(element_number[1])
+
+    formula.append([element, number])
+
+    chemical = input()
+
+molecular_mass = 0
+
+for i in range(len(formula)):
+    element = formula[i][0]
+    number = formula[i][1]
+    molecular_mass += masses[element] * number
+
+for i in range(len(formula)):
+    element = formula[i][0]
+    number = formula[i][1]
+
+    molecule += element
+
+    if number != 1:
+        molecule += str(number)
+
+print('molecular mass: {:.4f}'.format(molecular_mass))
+print('molecule: {}'.format(molecule))
