@@ -1,0 +1,43 @@
+import numpy as np
+a = np.array([[1, 2, 3], [10, 20, 30], [100, 200, 300]])
+b = np.arange(-6, 4)
+c = np.arange(-5, 10, 2)
+
+
+# add your solutions below the appropriate print calls
+
+print("Array methods")
+# "sums by row"
+print(a.sum(axis=1))
+# "sums by column"
+print(a.sum(axis=0))
+# the maximum of the array
+print(a.max())
+# the maxima of all rows
+print(a.max(axis=1))
+# the mean of the sub-array formed by omitting the first row and column
+print(a[1:,1:].mean())
+# the products by columns but only including the first two columns
+print(a[:,:2].prod(axis=0))
+
+print("Array arithmetic")
+# b^2 - 1
+print(b**2-1)
+# 100b
+print(100 * b)
+# 2^reversed(b)
+print(2.0 ** b[::-1])
+# delta
+delta = b[1:]**3 - b[:-1]**3
+print(delta)
+print(delta.shape)
+print("ufuncs")
+
+# absolute values |c|
+print(np.abs(c))
+# sign of c
+print(np.sign(c))
+# heaviside function of c
+print(np.heaviside(c,0.5))
+# exponential function, rounded to nearest integer
+print(np.rint(np.exp(c)))
