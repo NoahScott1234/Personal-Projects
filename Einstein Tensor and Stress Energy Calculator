@@ -1,0 +1,115 @@
+
+import sympy as sp 
+t = sp.symbols("t")
+r = sp.symbols("r")
+theta = sp.symbols("theta") 
+phi = sp.symbols("phi")
+
+mu = sp.symbols("mu")
+nu = sp.symbols("nu")
+sigma = sp.symbols("sigma")
+rho = sp.symbols("sigma")
+
+G = sp.symbols("G")
+M = sp.symbols("M")
+
+""" Define metric, and coordinates"""
+Lambda = sp.symbols('Lambda')
+
+coordinates = [t, r, theta, phi]
+
+f = 1 - Lambda*r**2/3
+
+g = sp.Matrix([
+    [-f,0,0,0],
+    [0,(f)**-1,0,0],
+    [0,0,r**2,0],
+    [0,0,0,r**2 * sp.sin(theta)**2]
+])
+
+g_inv = g.inv()
+gamma = {}
+
+""" Find Connection Coefficients"
+for sigma in range(4):
+    for mu in range(4):
+        for nu in range (4):
+            gamma_x_two = 0
+            for rho in range (4):
+            
+                gamma_x_two += g_inv[sigma, rho] * (
+                sp.diff(g[rho, nu], coordinates[mu]) 
+                + sp.diff(g[rho, mu], coordinates[nu]) 
+                - sp.diff(g[mu, nu], coordinates[rho]))
+            gamma[sigma, mu, nu] = sp.simplify(gamma_x_two/2)
+for indices, value in gamma.items():
+    if value != 0:
+        sigma, mu, nu = indices
+        print(f"Gamma^{sigma}_{mu}{nu}=", value)
+
+
+a = sp.symbols("a")
+b = sp.symbols("b")
+c = sp.symbols("c")
+d = sp.symbols("d")
+e = sp.symbols("e")
+
+""" Find Riemann Tensor Using Connection Coefficients, calculated above"""
+R = {}
+for a in range(4):
+    for b in range(4):
+        for c in range(4):
+            for d in range(4):
+                
+                Reimann = (sp.diff(gamma[d,a,c],coordinates[b]) 
+                - sp.diff(gamma[d,a,b],coordinates[c]))
+                
+                for e in range(4):
+                    Reimann += (gamma[e,a,c] * gamma[d,b,e]
+                    - gamma[e,a,b] * gamma[d,c,e])
+                R[d,a,b,c] = sp.simplify(Reimann)
+check = R[d,a,b,c] + R[d,a,c,b]
+
+for index, value in R.items():
+    if value !=0:
+        d,a,b,c = index
+        print(f'R^{d}_{a}_{b}_{c} =', value)
+""" Find Ricci Tensor Using Connection Coefficients, Same as Riemann tensor except first and third indices are contracted"""
+Ricci = {}
+for a in range(4):
+    for c in range(4):
+        Ric = 0
+        for d in range(4):
+            Ric += (sp.diff(gamma[d,a,c],coordinates[d]) 
+            - sp.diff(gamma[d,a,d],coordinates[c]))
+            for e in range(4):  
+                Ric += ((gamma[e,a,c] * gamma[d,d,e])
+                -(gamma[e,a,d] * gamma[d,c,e]))
+            Ricci[a,c] = sp.simplify(Ric)
+for index, value in Ricci.items():
+    if value != 0:
+        a,c = index
+        print(f'R_{a}_{c} =', value)
+Ricci_Scalar = 0
+for a in range (4):
+    for b in range(4):
+        Ricci_Scalar += g_inv[a,c] * Ricci[a,c]
+print(f'Ricci Scalar =', Ricci_Scalar)
+"Calculate Einstein Tensor"
+E={}
+for mu in range(4):
+    for nu in range(4):
+        E[mu,nu] = Ricci[mu,nu] - 1/2 * Ricci_Scalar * g[mu,nu]
+for index, value in E.items():
+    if value !=0:
+        mu,nu = index
+        print(f'G_{mu}_{nu} = ', value)
+T = {}
+c = sp.symbols("c")
+for mu in range(4):
+    for nu in range(4):
+        T[mu,nu] = (c**4)/(8*sp.pi*G) * E[mu,nu]
+for index, value in T.items():
+    if value !=0:
+        mu,nu = index
+        print(f'T_{mu}_{nu} = ', value)
