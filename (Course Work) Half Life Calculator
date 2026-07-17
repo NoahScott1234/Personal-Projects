@@ -1,0 +1,33 @@
+import math
+
+# An isotope has half-life T.
+# Return the amount of a starting mass N0
+# of the isotope that remains after time t,
+def compute_Nt(N0, t, T):
+    Nt = N0 * math.exp( (-0.693 * t) / T)
+    return Nt
+def compute_T(N0, Nt, t):
+    T = (-0.693 * t)/(math.log(Nt/N0))
+    return T
+    # Type your code here.
+
+if __name__ == '__main__':
+
+    choice = input()
+
+    if choice == 'N':  
+        values = list(map(float,input().split()))      
+        N0 = values[0]
+        t =  values[1]
+        T = values[2]
+        Nt = compute_Nt(N0, t, T)
+        print(f'Nt = {Nt:.4f}')
+    elif choice == 'T':                    # Calculate half-life
+        values = list(map(float,input().split()))
+        N0 = values[0]
+        Nt = values[1]
+        t = values[2]
+        T = compute_T(N0, Nt, t)
+        print(f'T = {T:.4f}')
+    else:
+        print("invalid choice")
